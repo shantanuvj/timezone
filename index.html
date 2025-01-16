@@ -11,7 +11,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             background-color: #f4f4f9;
             margin: 0;
         }
@@ -24,13 +24,17 @@
 
         .slider-container {
             margin: 20px 0;
+            border: 2px solid #ccc; /* Added border for sections */
+            padding: 20px;
+            border-radius: 10px;
+            background: #fff;
         }
 
         label {
             font-size: 24px;
             display: block;
             margin-bottom: 10px;
-            padding: 10px; /* Added padding for text above sliders */
+            padding: 10px;
         }
 
         input[type="range"] {
@@ -46,65 +50,81 @@
             transition: background 0.3s;
         }
 
+        /* Boring Version Slider Handles */
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 80px;
-            height: 80px;
-            background: none;
-            border: none;
+            width: 30px; /* Increased size for boring version */
+            height: 30px;
+            background: #000;
+            border: 2px solid #888; /* Added border */
+            border-radius: 50%;
             cursor: pointer;
         }
 
         input[type="range"]::-moz-range-thumb {
-            width: 80px;
-            height: 80px;
-            background: none;
-            border: none;
+            width: 30px; /* Increased size for boring version */
+            height: 30px;
+            background: #000;
+            border: 2px solid #888; /* Added border */
+            border-radius: 50%;
             cursor: pointer;
         }
 
-        /* Custom Slider Handles */
-        #istSlider::-webkit-slider-thumb {
+        /* Fun Version Slider Handles */
+        .fun-version #istSlider::-webkit-slider-thumb {
             background: url('indiaicon.png') no-repeat center;
             background-size: contain;
-        }
-        #istSlider::-moz-range-thumb {
-            background: url('indiaicon.png') no-repeat center;
-            background-size: contain;
+            width: 80px;
+            height: 80px;
+            border: none;
         }
 
-        #estSlider::-webkit-slider-thumb {
+        .fun-version #estSlider::-webkit-slider-thumb {
             background: url('juiicon.png') no-repeat center;
             background-size: contain;
-        }
-        #estSlider::-moz-range-thumb {
-            background: url('juiicon.png') no-repeat center;
-            background-size: contain;
-        }
-
-        #pstSlider::-webkit-slider-thumb {
-            background: url('namrataicon.png') no-repeat center;
-            background-size: contain;
-        }
-        #pstSlider::-moz-range-thumb {
-            background: url('namrataicon.png') no-repeat center;
-            background-size: contain;
+            width: 80px;
+            height: 80px;
+            border: none;
         }
 
-        #aedtSlider::-webkit-slider-thumb {
-            background: url('kalpakicon.png') no-repeat center;
+        .fun-version #pstSlider::-webkit-slider-thumb {
+            background: url('namrataicon.png') no-repeat center;
             background-size: contain;
+            width: 80px;
+            height: 80px;
+            border: none;
         }
-        #aedtSlider::-moz-range-thumb {
+
+        .fun-version #aedtSlider::-webkit-slider-thumb {
             background: url('kalpakicon.png') no-repeat center;
             background-size: contain;
+            width: 80px;
+            height: 80px;
+            border: none;
         }
 
         .time-display {
             margin-top: 20px;
             font-size: 18px;
-            padding: 10px; /* Added padding around text below sliders */
+            padding: 10px;
+        }
+
+        .buttons {
+            margin-top: 20px;
+        }
+
+        .buttons button {
+            padding: 10px 20px;
+            font-size: 18px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .buttons button:hover {
+            background-color: #ddd;
         }
 
         @media (max-width: 768px) {
@@ -114,7 +134,7 @@
 
             label {
                 font-size: 18px;
-                padding: 8px; /* Slightly reduced padding for mobile */
+                padding: 8px;
             }
 
             input[type="range"] {
@@ -123,7 +143,12 @@
 
             .time-display {
                 font-size: 16px;
-                padding: 8px; /* Slightly reduced padding for mobile */
+                padding: 8px;
+            }
+
+            .buttons button {
+                font-size: 16px;
+                padding: 8px 16px;
             }
         }
     </style>
@@ -153,37 +178,80 @@
         </div>
     </div>
 
+    <div class="buttons">
+        <button id="boringButton">Boring Version</button>
+        <button id="funButton">Fun Version</button>
+    </div>
+
     <script>
-        // Time conversion functions
-        function convertIstToEst(istTime) { return (istTime + 14) % 24; } // +14 hours
-        function convertIstToPst(istTime) { return (istTime + 11.5) % 24; } // +11.5 hours
-        function convertIstToAedt(istTime) { return (istTime + 5.5) % 24; } // +5.5 hours
+        // Timezone offsets in minutes
+        const TIMEZONE_OFFSETS = {
+            IST: 0,
+            EST: -14 * 60,
+            PST: -11.5 * 60,
+            AEDT: 5.5 * 60,
+        };
 
-        function updateTimes() {
-            const istSlider = document.getElementById("istSlider");
-            const estSlider = document.getElementById("estSlider");
-            const pstSlider = document.getElementById("pstSlider");
-            const aedtSlider = document.getElementById("aedtSlider");
-
-            const istHour = parseInt(istSlider.value);
-
-            // Update all sliders
-            estSlider.value = convertIstToEst(istHour);
-            pstSlider.value = convertIstToPst(istHour);
-            aedtSlider.value = convertIstToAedt(istHour);
-
-            // Update displayed times
-            document.getElementById("istTime").innerHTML = `<br>IST Time: ${istHour}:00`;
-            document.getElementById("estTime").innerHTML = `<br>EST Time: ${convertIstToEst(istHour)}:00`;
-            document.getElementById("pstTime").innerHTML = `<br>PST Time: ${convertIstToPst(istHour)}:00`;
-            document.getElementById("aedtTime").innerHTML = `<br>AEDT Time: ${convertIstToAedt(istHour)}:00`;
+        // Convert time in minutes to a 24-hour format
+        function convertTo24Hour(baseMinutes, offsetMinutes) {
+            const totalMinutes = (baseMinutes + offsetMinutes + 1440) % 1440;
+            return { hours: Math.floor(totalMinutes / 60), minutes: totalMinutes % 60 };
         }
 
-        // Add event listener to IST slider
-        document.getElementById("istSlider").addEventListener("input", updateTimes);
+        // Format time to 12-hour clock with AM/PM
+        function formatTime({ hours, minutes }) {
+            const suffix = hours >= 12 ? "PM" : "AM";
+            const formattedHour = hours % 12 || 12;
+            return `${formattedHour}:${minutes.toString().padStart(2, "0")} ${suffix}`;
+        }
+
+        // Update all sliders when any slider changes
+        function updateTimes(changedSlider, newValue) {
+            const istMinutes =
+                changedSlider === "IST"
+                    ? newValue * 60
+                    : convertTo24Hour(newValue * 60, -TIMEZONE_OFFSETS[changedSlider]).hours * 60;
+
+            const estTime = convertTo24Hour(istMinutes, TIMEZONE_OFFSETS.EST);
+            const pstTime = convertTo24Hour(istMinutes, TIMEZONE_OFFSETS.PST);
+            const aedtTime = convertTo24Hour(istMinutes, TIMEZONE_OFFSETS.AEDT);
+
+            document.getElementById("istSlider").value = Math.floor(istMinutes / 60);
+            document.getElementById("estSlider").value = estTime.hours;
+            document.getElementById("pstSlider").value = pstTime.hours;
+            document.getElementById("aedtSlider").value = aedtTime.hours;
+
+            document.getElementById("istTime").innerHTML = `<br>IST Time: ${formatTime(convertTo24Hour(istMinutes, 0))}`;
+            document.getElementById("estTime").innerHTML = `<br>EST Time: ${formatTime(estTime)}`;
+            document.getElementById("pstTime").innerHTML = `<br>PST Time: ${formatTime(pstTime)}`;
+            document.getElementById("aedtTime").innerHTML = `<br>AEDT Time: ${formatTime(aedtTime)}`;
+        }
+
+        // Event listeners for all sliders
+        document.getElementById("istSlider").addEventListener("input", (e) => {
+            updateTimes("IST", parseInt(e.target.value));
+        });
+        document.getElementById("estSlider").addEventListener("input", (e) => {
+            updateTimes("EST", parseInt(e.target.value));
+        });
+        document.getElementById("pstSlider").addEventListener("input", (e) => {
+            updateTimes("PST", parseInt(e.target.value));
+        });
+        document.getElementById("aedtSlider").addEventListener("input", (e) => {
+            updateTimes("AEDT", parseInt(e.target.value));
+        });
 
         // Initialize the times
-        updateTimes();
+        updateTimes("IST", 5);
+
+        // Toggle between Fun and Boring versions
+        document.getElementById("boringButton").addEventListener("click", () => {
+            document.body.classList.remove("fun-version");
+        });
+
+        document.getElementById("funButton").addEventListener("click", () => {
+            document.body.classList.add("fun-version");
+        });
     </script>
 
 </body>
