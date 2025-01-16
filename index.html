@@ -158,23 +158,23 @@
     <div class="container">
         <div class="slider-container">
             <label for="istSlider">Mumbai Time:</label>
-            <input type="range" id="istSlider" min="0" max="23" value="5" step="1">
+            <input type="range" id="istSlider" min="0" max="23.5" value="5" step="0.5">
             <div class="time-display" id="istTime"><br>IST Time: 5:00 AM</div>
         </div>
         <div class="slider-container">
             <label for="estSlider">Toronto Time:</label>
-            <input type="range" id="estSlider" min="0" max="23" value="19" step="1">
+            <input type="range" id="estSlider" min="0" max="23.5" value="19" step="0.5">
             <div class="time-display" id="estTime"><br>EST Time: 7:00 PM</div>
         </div>
         <div class="slider-container">
             <label for="pstSlider">California Time:</label>
-            <input type="range" id="pstSlider" min="0" max="23" value="20" step="1">
-            <div class="time-display" id="pstTime"><br>PST Time: 8:00 PM</div>
+            <input type="range" id="pstSlider" min="0" max="23.5" value="12" step="0.5">
+            <div class="time-display" id="pstTime"><br>PST Time: 12:00 PM</div>
         </div>
         <div class="slider-container">
             <label for="aedtSlider">Melbourne Time:</label>
-            <input type="range" id="aedtSlider" min="0" max="23" value="5" step="1">
-            <div class="time-display" id="aedtTime"><br>AEDT Time: 5:00 AM</div>
+            <input type="range" id="aedtSlider" min="0" max="23.5" value="12" step="0.5">
+            <div class="time-display" id="aedtTime"><br>AEDT Time: 12:00 PM</div>
         </div>
     </div>
 
@@ -210,16 +210,17 @@
             const istMinutes =
                 changedSlider === "IST"
                     ? newValue * 60
-                    : convertTo24Hour(newValue * 60, -TIMEZONE_OFFSETS[changedSlider]).hours * 60;
+                    : convertTo24Hour(newValue * 60, -TIMEZONE_OFFSETS[changedSlider]).hours * 60 +
+                      convertTo24Hour(newValue * 60, -TIMEZONE_OFFSETS[changedSlider]).minutes;
 
             const estTime = convertTo24Hour(istMinutes, TIMEZONE_OFFSETS.EST);
             const pstTime = convertTo24Hour(istMinutes, TIMEZONE_OFFSETS.PST);
             const aedtTime = convertTo24Hour(istMinutes, TIMEZONE_OFFSETS.AEDT);
 
-            document.getElementById("istSlider").value = Math.floor(istMinutes / 60);
-            document.getElementById("estSlider").value = estTime.hours;
-            document.getElementById("pstSlider").value = pstTime.hours;
-            document.getElementById("aedtSlider").value = aedtTime.hours;
+            document.getElementById("istSlider").value = istMinutes / 60;
+            document.getElementById("estSlider").value = estTime.hours + estTime.minutes / 60;
+            document.getElementById("pstSlider").value = pstTime.hours + pstTime.minutes / 60;
+            document.getElementById("aedtSlider").value = aedtTime.hours + aedtTime.minutes / 60;
 
             document.getElementById("istTime").innerHTML = `<br>IST Time: ${formatTime(convertTo24Hour(istMinutes, 0))}`;
             document.getElementById("estTime").innerHTML = `<br>EST Time: ${formatTime(estTime)}`;
@@ -229,16 +230,16 @@
 
         // Event listeners for all sliders
         document.getElementById("istSlider").addEventListener("input", (e) => {
-            updateTimes("IST", parseInt(e.target.value));
+            updateTimes("IST", parseFloat(e.target.value));
         });
         document.getElementById("estSlider").addEventListener("input", (e) => {
-            updateTimes("EST", parseInt(e.target.value));
+            updateTimes("EST", parseFloat(e.target.value));
         });
         document.getElementById("pstSlider").addEventListener("input", (e) => {
-            updateTimes("PST", parseInt(e.target.value));
+            updateTimes("PST", parseFloat(e.target.value));
         });
         document.getElementById("aedtSlider").addEventListener("input", (e) => {
-            updateTimes("AEDT", parseInt(e.target.value));
+            updateTimes("AEDT", parseFloat(e.target.value));
         });
 
         // Initialize the times
