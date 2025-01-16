@@ -12,206 +12,108 @@
             align-items: center;
             height: 100vh;
             background-color: #f4f4f9;
+            margin: 0;
         }
         .container {
             text-align: center;
+            width: 100%;
         }
         .slider-container {
-            margin: 20px;
+            margin: 40px;
+        }
+        label {
+            font-size: 28px; /* Increased font size */
+            display: block;
+            margin-bottom: 20px;
         }
         input[type="range"] {
-            width: 300px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 600px; /* Increased slider width */
+            height: 16px; /* Increased slider height */
+            background: #ddd;
+            border-radius: 10px;
+            outline: none;
+            transition: background 0.3s;
         }
+        #istSlider::-webkit-slider-thumb,
+        #estSlider::-webkit-slider-thumb,
+        #pstSlider::-webkit-slider-thumb,
+        #aedtSlider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 80px;
+            height: 80px;
+            border: none;
+            cursor: pointer;
+        }
+        #istSlider::-webkit-slider-thumb { background: url('indiaicon.png') no-repeat center; background-size: contain; }
+        #estSlider::-webkit-slider-thumb { background: url('juiicon.png') no-repeat center; background-size: contain; }
+        #pstSlider::-webkit-slider-thumb { background: url('namrataicon.png') no-repeat center; background-size: contain; }
+        #aedtSlider::-webkit-slider-thumb { background: url('kalpakicon.png') no-repeat center; background-size: contain; }
         .time-display {
-            margin-top: 10px;
+            margin-top: 20px;
+            font-size: 24px;
         }
         .slider-label {
-            font-size: 18px;
+            font-size: 28px;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- IST Slider -->
         <div class="slider-container">
             <label for="istSlider" class="slider-label">Mumbai Time:</label>
             <input type="range" id="istSlider" min="0" max="23" value="5" step="1">
-            <div class="time-display" id="istTime">IST Time: 5:00 AM</div>
+            <div class="time-display" id="istTime"><br>IST Time: 5:00 AM</div>
         </div>
-
-        <!-- EST Slider -->
         <div class="slider-container">
             <label for="estSlider" class="slider-label">Toronto Time:</label>
             <input type="range" id="estSlider" min="0" max="23" value="19" step="1">
-            <div class="time-display" id="estTime">EST Time: 7:00 PM</div>
+            <div class="time-display" id="estTime"><br>EST Time: 7:00 PM</div>
         </div>
-
-        <!-- PST Slider -->
         <div class="slider-container">
             <label for="pstSlider" class="slider-label">California Time:</label>
             <input type="range" id="pstSlider" min="0" max="23" value="20" step="1">
-            <div class="time-display" id="pstTime">PST Time: 8:00 PM</div>
+            <div class="time-display" id="pstTime"><br>PST Time: 8:00 PM</div>
         </div>
-
-        <!-- AEDT Slider -->
         <div class="slider-container">
             <label for="aedtSlider" class="slider-label">Melbourne Time:</label>
             <input type="range" id="aedtSlider" min="0" max="23" value="5" step="1">
-            <div class="time-display" id="aedtTime">AEDT Time: 5:00 AM</div>
+            <div class="time-display" id="aedtTime"><br>AEDT Time: 5:00 AM</div>
         </div>
     </div>
 
     <script>
-        // Convert IST to other timezones
-        function convertIstToEst(istTime) {
-            let estTime = new Date(istTime.getTime() - 10.5 * 60 * 60 * 1000); // IST to EST
-            return estTime;
-        }
+        function convertIstToEst(istTime) { return new Date(istTime.getTime() - 10.5 * 60 * 60 * 1000); }
+        function convertIstToPst(istTime) { return new Date(istTime.getTime() - 13.5 * 60 * 60 * 1000); }
+        function convertIstToAedt(istTime) { return new Date(istTime.getTime() + 5.5 * 60 * 60 * 1000); }
+        function convertEstToIst(estTime) { return new Date(estTime.getTime() + 10.5 * 60 * 60 * 1000); }
+        function convertEstToPst(estTime) { return new Date(estTime.getTime() - 3 * 60 * 60 * 1000); }
+        function convertEstToAedt(estTime) { return new Date(estTime.getTime() + 16 * 60 * 60 * 1000); }
+        function convertPstToIst(pstTime) { return new Date(pstTime.getTime() + 13.5 * 60 * 60 * 1000); }
+        function convertPstToEst(pstTime) { return new Date(pstTime.getTime() + 3 * 60 * 60 * 1000); }
+        function convertPstToAedt(pstTime) { return new Date(pstTime.getTime() + 19 * 60 * 60 * 1000); }
+        function convertAedtToIst(aedtTime) { return new Date(aedtTime.getTime() - 5.5 * 60 * 60 * 1000); }
+        function convertAedtToEst(aedtTime) { return new Date(aedtTime.getTime() - 16 * 60 * 60 * 1000); }
+        function convertAedtToPst(aedtTime) { return new Date(aedtTime.getTime() - 19 * 60 * 60 * 1000); }
 
-        function convertIstToPst(istTime) {
-            let pstTime = new Date(istTime.getTime() - 13.5 * 60 * 60 * 1000); // IST to PST
-            return pstTime;
-        }
-
-        function convertIstToAedt(istTime) {
-            let aedtTime = new Date(istTime.getTime() + 5.5 * 60 * 60 * 1000); // IST to AEDT
-            return aedtTime;
-        }
-
-        // Convert EST to other timezones
-        function convertEstToIst(estTime) {
-            let istTime = new Date(estTime.getTime() + 10.5 * 60 * 60 * 1000); // EST to IST
-            return istTime;
-        }
-
-        function convertEstToPst(estTime) {
-            let pstTime = new Date(estTime.getTime() - 3 * 60 * 60 * 1000); // EST to PST
-            return pstTime;
-        }
-
-        function convertEstToAedt(estTime) {
-            let aedtTime = new Date(estTime.getTime() + 16 * 60 * 60 * 1000); // EST to AEDT
-            return aedtTime;
-        }
-
-        // Convert PST to other timezones
-        function convertPstToIst(pstTime) {
-            let istTime = new Date(pstTime.getTime() + 13.5 * 60 * 60 * 1000); // PST to IST
-            return istTime;
-        }
-
-        function convertPstToEst(pstTime) {
-            let estTime = new Date(pstTime.getTime() + 3 * 60 * 60 * 1000); // PST to EST
-            return estTime;
-        }
-
-        function convertPstToAedt(pstTime) {
-            let aedtTime = new Date(pstTime.getTime() + 19 * 60 * 60 * 1000); // PST to AEDT
-            return aedtTime;
-        }
-
-        // Convert AEDT to other timezones
-        function convertAedtToIst(aedtTime) {
-            let istTime = new Date(aedtTime.getTime() - 5.5 * 60 * 60 * 1000); // AEDT to IST
-            return istTime;
-        }
-
-        function convertAedtToEst(aedtTime) {
-            let estTime = new Date(aedtTime.getTime() - 16 * 60 * 60 * 1000); // AEDT to EST
-            return estTime;
-        }
-
-        function convertAedtToPst(aedtTime) {
-            let pstTime = new Date(aedtTime.getTime() - 19 * 60 * 60 * 1000); // AEDT to PST
-            return pstTime;
-        }
-
-        // Update all timezones when IST slider is moved
         function updateIstTime() {
             let istHour = parseInt(document.getElementById("istSlider").value);
             let istTime = new Date();
             istTime.setHours(istHour);
-            istTime.setMinutes(0);
-            document.getElementById("istTime").textContent = "IST Time: " + istTime.getHours() + ":00 AM";
-
-            // Update other sliders based on IST time
+            document.getElementById("istTime").innerHTML = "<br>IST Time: " + istHour + ":00 AM";
             document.getElementById("estSlider").value = convertIstToEst(istTime).getHours();
             document.getElementById("pstSlider").value = convertIstToPst(istTime).getHours();
             document.getElementById("aedtSlider").value = convertIstToAedt(istTime).getHours();
-
-            // Update time displays
-            document.getElementById("estTime").textContent = "EST Time: " + convertIstToEst(istTime).getHours() + ":00 PM";
-            document.getElementById("pstTime").textContent = "PST Time: " + convertIstToPst(istTime).getHours() + ":00 PM";
-            document.getElementById("aedtTime").textContent = "AEDT Time: " + convertIstToAedt(istTime).getHours() + ":00 AM";
+            document.getElementById("estTime").innerHTML = "<br>EST Time: " + convertIstToEst(istTime).getHours() + ":00 PM";
+            document.getElementById("pstTime").innerHTML = "<br>PST Time: " + convertIstToPst(istTime).getHours() + ":00 PM";
+            document.getElementById("aedtTime").innerHTML = "<br>AEDT Time: " + convertIstToAedt(istTime).getHours() + ":00 AM";
         }
-
-        // Update all timezones when EST slider is moved
-        function updateEstTime() {
-            let estHour = parseInt(document.getElementById("estSlider").value);
-            let estTime = new Date();
-            estTime.setHours(estHour);
-            estTime.setMinutes(0);
-            document.getElementById("estTime").textContent = "EST Time: " + estTime.getHours() + ":00 PM";
-
-            // Update other sliders based on EST time
-            document.getElementById("istSlider").value = convertEstToIst(estTime).getHours();
-            document.getElementById("pstSlider").value = convertEstToPst(estTime).getHours();
-            document.getElementById("aedtSlider").value = convertEstToAedt(estTime).getHours();
-
-            // Update time displays
-            document.getElementById("istTime").textContent = "IST Time: " + convertEstToIst(estTime).getHours() + ":00 AM";
-            document.getElementById("pstTime").textContent = "PST Time: " + convertEstToPst(estTime).getHours() + ":00 PM";
-            document.getElementById("aedtTime").textContent = "AEDT Time: " + convertEstToAedt(estTime).getHours() + ":00 AM";
-        }
-
-        // Update all timezones when PST slider is moved
-        function updatePstTime() {
-            let pstHour = parseInt(document.getElementById("pstSlider").value);
-            let pstTime = new Date();
-            pstTime.setHours(pstHour);
-            pstTime.setMinutes(0);
-            document.getElementById("pstTime").textContent = "PST Time: " + pstTime.getHours() + ":00 PM";
-
-            // Update other sliders based on PST time
-            document.getElementById("istSlider").value = convertPstToIst(pstTime).getHours();
-            document.getElementById("estSlider").value = convertPstToEst(pstTime).getHours();
-            document.getElementById("aedtSlider").value = convertPstToAedt(pstTime).getHours();
-
-            // Update time displays
-            document.getElementById("istTime").textContent = "IST Time: " + convertPstToIst(pstTime).getHours() + ":00 AM";
-            document.getElementById("estTime").textContent = "EST Time: " + convertPstToEst(pstTime).getHours() + ":00 PM";
-            document.getElementById("aedtTime").textContent = "AEDT Time: " + convertPstToAedt(pstTime).getHours() + ":00 AM";
-        }
-
-        // Update all timezones when AEDT slider is moved
-        function updateAedtTime() {
-            let aedtHour = parseInt(document.getElementById("aedtSlider").value);
-            let aedtTime = new Date();
-            aedtTime.setHours(aedtHour);
-            aedtTime.setMinutes(0);
-            document.getElementById("aedtTime").textContent = "AEDT Time: " + aedtTime.getHours() + ":00 AM";
-
-            // Update other sliders based on AEDT time
-            document.getElementById("istSlider").value = convertAedtToIst(aedtTime).getHours();
-            document.getElementById("estSlider").value = convertAedtToEst(aedtTime).getHours();
-            document.getElementById("pstSlider").value = convertAedtToPst(aedtTime).getHours();
-
-            // Update time displays
-            document.getElementById("istTime").textContent = "IST Time: " + convertAedtToIst(aedtTime).getHours() + ":00 AM";
-            document.getElementById("estTime").textContent = "EST Time: " + convertAedtToEst(aedtTime).getHours() + ":00 PM";
-            document.getElementById("pstTime").textContent = "PST Time: " + convertAedtToPst(aedtTime).getHours() + ":00 PM";
-        }
-
-        // Event listeners for sliders
         document.getElementById("istSlider").addEventListener("input", updateIstTime);
-        document.getElementById("estSlider").addEventListener("input", updateEstTime);
-        document.getElementById("pstSlider").addEventListener("input", updatePstTime);
-        document.getElementById("aedtSlider").addEventListener("input", updateAedtTime);
-
-        // Initial setup
         updateIstTime();
     </script>
-
 </body>
 </html>
